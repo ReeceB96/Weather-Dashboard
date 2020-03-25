@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <title>Weather Dashboard</title>
+</head>
+<body>
+    <header><h2>Welcome to the Weather Dashboard!</h2></header>
+
+    <div id= container>
+        <h4>Search for a City!</h4>
+        <input type="text" id="box" name="name"><br>
+        <input type= "submit" id= "goButton" class= "button" value="Go!">
+    </div>
+    <div id= "contentBox"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    function getInfo() {
+
+        
+        $("#goButton").on("click", function() {
+            var cityName = document.querySelector("#box").value;
+            var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&apikey=1fe1b1156deb9197209e78927d7eff85";
+        
+        
+            $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(response){
+            console.log(response); 
+            var weatherDiv = $("<div>").css('border', '1px solid black');
+            var cityId = response.name;
+            var pCity = $("<h1>").text(cityId);
+            weatherDiv.append(pCity);
+
+            
+
+            var cityDate = moment().format('L');
+            weatherDiv.append(cityDate);
+
+            var imageURL = response.weather[0].icon;
+            var image = "https://openweathermap.org/img/w/" + imageURL + ".png";
+            var weatherImage = $('<img>').attr('src', image);
+            weatherDiv.append(weatherImage);
+
+            var temp = response.main.temp;
+            var pTemp = $("<p>").text("Temperature: " + temp + " F")
+            weatherDiv.append(pTemp);
+
+            var hum = response.main.humidity;
+            var pHum = $("<p>").text("Humidity " + hum + "%")
+            weatherDiv.append(pHum);
+
+            var wind = response.wind.speed;
+            var pWind = $("<p>").text("Wind Speed: " + wind + " MPH");
+            weatherDiv.append(pWind);
+
+
+            $("#contentBox").prepend(weatherDiv);
+             });
+
+
+
+    });
+
+    }
+    getInfo();
+    </script>
+    
+</body>
+</html>
